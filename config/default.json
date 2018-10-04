@@ -1,0 +1,24 @@
+{
+    "App": {
+        "restApiEndpoint": {
+            "version1ContactPath": "/v1/contact",
+            "version2ContactPath": "/v2/contact"
+        },
+
+        "webServer": {
+            "protocol": "http",
+            "host": "localhost",
+            "port": 3000 
+         }
+    },
+        "MySQL": {
+        "host" : "localhost",
+        "user" : "root",
+        "password" : "password",
+        "database": "packtdb"
+    },
+
+    "MongoDB" : {
+        "connectionString": "mongodb://localhost/packtdb"
+    }
+}   

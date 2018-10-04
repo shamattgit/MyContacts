@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>        
+        <% if (newRecord) { %>
+        <title>My Contacts - Add Profile</title>            
+        <% } else { %>
+        <title>My Contacts - Edit Profile</title>            
+        <% } %>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        
+        <link rel="stylesheet" href="/public/assets/css/bootstrap.css"/>
+        <link rel="stylesheet" href="/public/assets/css/font-awesome.css"/>
+
+        <link rel="stylesheet" href="/public/assets/css/profile.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-title">
+                <% if (newRecord) { %>
+                <h2><span class="fa fa-cogs"></span> Add Profile</h2>
+                <% } else { %>
+                <h2><span class="fa fa-cogs"></span> Edit Profile</h2>
+                <% } %>
+            </div>
+
+            <div class="row">                        
+                <div class="col-md-12">
+                    
+                    <form id="profileForm" action="" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="panel panel-default">
+                            <div class="panel-body profile">
+                                <h3><span class="fa fa-pencil"></span> Profile</h3>
+                            </div>
+                            <div class="profile-card form-group-separated">
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">Contact ID</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="contactId" name="contactId" type="text" value="<%= contact.contactId %>" class="form-control" readonly="true" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">First Name</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="firstName" required name="firstName" type="text" value="<%= contact.firstName %>" class="form-control" placeholder="First name" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">Last Name</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="lastName" required name="lastName" type="text" value="<%= contact.lastName %>" class="form-control" placeholder="Last name"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">Email</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="email" name="email" type="text" value="<%= contact.email %>" class="form-control" placeholder="Email" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">Phone</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="phone" name="phone" type="text" value="<%= contact.phone %>" class="form-control" placeholder="Phone" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label">Image</label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <input id="imagePath" name="imagePath" type="file" class="file" placeholder="Image" />
+                                    </div>
+                                </div>
+                                <% if (contact.imagePath !== null) { %>
+                                <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label"></label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <img src="<%= '/' + contact.imagePath %>" alt="<%= contact.firstName + ' ' + contact.lastName %>">
+                                    </div>
+                                </div>
+                                <% } %>
+<!--                                 <div class="form-group">
+                                    <label class="col-md-2 col-xs-4 control-label"></label>
+                                    <div class="col-md-10 col-xs-8">
+                                        <img src="/public/assets/images/no-image.png" />
+                                    </div>
+                                </div>
+ -->                                <div class="form-group">
+                                    <div class="col-md-offset-10 col-md-1 col-xs-offset-6 col-xs-3">
+                                        <button type="submit" class="btn btn-primary btn-rounded pull-right">Save</button>
+                                    </div>
+                                    <div class="col-md-1 col-xs-3">
+                                        <a href="/" type="reset" class="btn btn-default btn-rounded pull-right">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+            
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/public/assets/js/jquery.js"></script>
+        <script type="text/javascript" src="/public/assets/js/bootstrap.js"></script>
+        <script type="text/javascript" src="/public/assets/js/bootbox.js"></script>
+
+        <script>
+            $(document).ready(function(e) {
+                $('#profileForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    <% if (newRecord) { %>
+                        var requestType = 'POST';
+                        var url = '<%= restEndpoint %>' ;
+                    <% } else { %>
+                        var requestType = 'PUT';
+                        var url = '<%= restEndpoint %>' + '/' +
+                                    <%= contact.contactId %>;
+                    <% } %>
+
+                    $.ajax({
+                        url: url,
+                        type: requestType,
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false
+                    })
+                    .done(function(data) {
+                        console.log('AJAX callback response:', JSON.stringify(data));
+                        window.location.href = '/';
+                    })
+                    .fail(function(jqXHR, textStatus, err) {
+                        console.log('AJAX error response:', textStatus);
+                        bootbox.alert('Error saving record!');
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
